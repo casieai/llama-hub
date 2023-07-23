@@ -65,13 +65,13 @@ class PandasExcelReader(BaseReader):
             sheet = df[key].values.astype(str).tolist()
             df_sheets.append(sheet)
 
-        tempArr = np.array(df_sheets)
+        temp_arr = np.array(df_sheets)
 
         # flatten the array
-        tempArr = tempArr.flatten()
+        temp_arr = temp_arr.flatten()
 
         # store as 1-dimensional list
-        text_list = tempArr.tolist()
+        text_list = temp_arr.tolist()
 
         if self._concat_rows:
             return [
