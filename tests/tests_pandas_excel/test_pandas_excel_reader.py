@@ -17,4 +17,4 @@ def test_bad_sheet():
     # file = open("bad_sheet.xlsx", "r")
     
     # load the bad xlsx sheet
-    pandas_excel_reader.load_data(file=Path('tests/tests_pandas_excel/bad_sheet.xlsx'))
+    pandas_excel_reader.load_data(file=Path('tests/tests_pandas_excel/alec_test.xlsx'))
