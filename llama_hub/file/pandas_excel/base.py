@@ -11,7 +11,7 @@ from llama_index.readers.schema.base import Document
 
 
 class PandasExcelReader(BaseReader):
-    """Pandas-based CSV parser.
+    r"""Pandas-based CSV parser.
 
     Parses CSVs using the separator detection from Pandas `read_csv`function.
     If special parameters are required, use the `pandas_config` dict.
