@@ -38,6 +38,7 @@ class PandasExcelReader(BaseReader):
         self._concat_rows = concat_rows
         self._row_joiner = row_joiner
 
+    
     def load_data(
         self,
         file: Path,
@@ -53,7 +54,6 @@ class PandasExcelReader(BaseReader):
             List[Document]: A list of`Document objects containing the values from the specified column in the Excel file.
         """
         import pandas as pd
-        import numpy as np
 
         df = pd.read_excel(file, sheet_name=sheet_name, **self._pandas_config)
 
@@ -64,14 +64,19 @@ class PandasExcelReader(BaseReader):
         for key in keys:
             sheet = df[key].values.astype(str).tolist()
             df_sheets.append(sheet)
+        
+        # flattens a multi-dimensional list
+        # returns multi-dim list as one-dim list
+        def flatten(list) -> List:
+            flattened_list = []
+            for item in list:
+                if isinstance(item, str):
+                     flattened_list.extend(item)
+                else:
+                     flatten(item)
+            return flattened_list
 
-        temp_arr = np.array(df_sheets)
-
-        # flatten the array
-        temp_arr = temp_arr.flatten()
-
-        # store as 1-dimensional list
-        text_list = temp_arr.tolist()
+        text_list = flatten(df_sheets)
 
         if self._concat_rows:
             return [
