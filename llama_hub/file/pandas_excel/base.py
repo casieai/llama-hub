@@ -54,29 +54,33 @@ class PandasExcelReader(BaseReader):
             List[Document]: A list of`Document objects containing the values from the specified column in the Excel file.
         """
         import pandas as pd
+        import collections.abc
 
         df = pd.read_excel(file, sheet_name=sheet_name, **self._pandas_config)
 
         keys = df.keys()
 
         df_sheets = []
+        # # add axes labels to df_sheets
+        # df_sheets.append(df.axes)
 
         for key in keys:
-            sheet = df[key].values.astype(str).tolist()
+            sheet = []
+            for h in df[key].axes:
+                sheet.append(str(h))
+            sheet.append(df[key].values.astype(str).tolist())
             df_sheets.append(sheet)
-        
-        # flattens a multi-dimensional list
-        # returns multi-dim list as one-dim list
-        def flatten(list) -> List:
-            flattened_list = []
-            for item in list:
-                if isinstance(item, str):
-                     flattened_list.extend(item)
-                else:
-                     flatten(item)
-            return flattened_list
 
-        text_list = flatten(df_sheets)
+        # flattens a multi-dimensional list
+        def flatten(lis):
+            for item in lis:
+                if isinstance(item, collections.abc.Iterable) and not isinstance(item, str):
+                    for x in flatten(item):
+                        yield x
+                else: 
+                    yield item
+
+        text_list = list(flatten(df_sheets))
 
         if self._concat_rows:
             return [
