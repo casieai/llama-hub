@@ -156,6 +156,7 @@ class SlackReader(BaseReader):
                     time.sleep(int(e.response.headers["retry-after"]))
                 else:
                     logger.error("Error parsing conversation replies: {}".format(e))
+                    raise
 
         return (
             "\n\n".join(result_messages)
